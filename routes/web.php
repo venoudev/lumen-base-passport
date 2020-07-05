@@ -24,7 +24,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router){
     });
 
     $router->group(['prefix' => 'auth'], function () use ($router){
-        $router->post('/logout', ['middleware' => 'auth'], 'Api\AuthController@logout');
+        $router->post('/logout', ['middleware' => ['auth'], 'uses' => 'Api\AuthController@logout']);
     });
 
 });

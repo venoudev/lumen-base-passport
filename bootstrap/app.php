@@ -89,7 +89,7 @@ $app->routeMiddleware([
     'permission' => Spatie\Permission\Middlewares\PermissionMiddleware::class,
     'role'       => Spatie\Permission\Middlewares\RoleMiddleware::class,
     'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
-    'cliente.credentials' => Laravel\Passport\Http\Middleware\CheckClientCredentials::class,
+    'cliente_credentials' => Laravel\Passport\Http\Middleware\CheckClientCredentials::class,
 ]);
 
 
@@ -137,13 +137,12 @@ $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 /**
 * Services Provider
 */
-$app->register(App\Providers\ServicesProvider::class);
+$app->register(App\Providers\SourcesServiceProvider::class);
 
 /**
 * Register Configure List
 */
-$app->configure('app');
-$app->configure('auth');
+
 
 /**
 * Soft Deletes Cascade
@@ -173,7 +172,9 @@ $app->register(Spatie\Permission\PermissionServiceProvider::class);
 */
 $app->register(Laravel\Passport\PassportServiceProvider::class);
 $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
-$app->configure('auth');
 
+
+$app->configure('app');
+$app->configure('auth');
 
 return $app;
