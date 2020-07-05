@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use App\Services\AuthServiceImpl;
 use App\Services\Contracts\AuthService;
 
-class ServicesProvider extends ServiceProvider
+class SourcesServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.

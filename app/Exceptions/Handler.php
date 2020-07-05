@@ -12,6 +12,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use Venoudev\Results\Exceptions\CheckDataException;
 use Venoudev\Results\Exceptions\NotFoundException;
+use Venoudev\Results\Exceptions\UnauthorizedPassportException;
+use Illuminate\Auth\AuthenticationException;
 
 use Throwable;
 use ResultManager;
@@ -97,6 +99,12 @@ class Handler extends ExceptionHandler
         if($exception instanceof FailLoginException){
             return $exception->getJsonResponse();
         }
+
+        if($exception instanceof AuthenticationException){
+            $exception_internal = new UnauthorizedPassportException();
+            return $exception_internal->getJsonResponse();
+        }
+
         return parent::render($request, $exception);
     }
 }
