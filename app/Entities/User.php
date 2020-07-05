@@ -16,6 +16,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     use HasApiTokens;
     use HasRoles;
 
+    protected $guard_name = 'api';
     /**
      * The attributes that are mass assignable.
      *

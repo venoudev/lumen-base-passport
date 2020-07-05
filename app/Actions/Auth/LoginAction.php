@@ -4,7 +4,6 @@ namespace App\Actions\Auth;
 
 use Venoudev\Results\Contracts\Result;
 use App\Exceptions\FailLoginException;
-
 use Auth;
 
 class LoginAction{
