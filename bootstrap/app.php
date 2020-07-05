@@ -23,9 +23,9 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
-// $app->withFacades();
+$app->withFacades();
 
-// $app->withEloquent();
+$app->withEloquent();
 
 /*
 |--------------------------------------------------------------------------
@@ -91,8 +91,8 @@ $app->configure('app');
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
+$app->register(App\Providers\AppServiceProvider::class);
+$app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 
 /*
@@ -111,5 +111,33 @@ $app->router->group([
 ], function ($router) {
     require __DIR__.'/../routes/web.php';
 });
+
+/*
+| Personal Components
+*/
+
+/**
+* Lumen Generator
+*/
+$app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
+
+/**
+* Services Provider
+*/
+$app->register(App\Providers\ServicesProvider::class);
+
+/**
+* Register Configure List
+*/
+$app->configure('app');
+$app->configure('auth');
+
+/**
+* Soft Deletes Cascade
+*/
+
+$app->register(Askedio\SoftCascade\Providers\LumenServiceProvider::class);
+
+$app->register(Venoudev\Results\ResultsServiceProvider::class);
 
 return $app;
