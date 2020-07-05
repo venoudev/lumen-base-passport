@@ -18,14 +18,22 @@ date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
 | application as an "IoC" container and router for this framework.
 |
 */
-
-$app = new Laravel\Lumen\Application(
+$app = new \Dusterio\LumenPassport\Lumen7Application(
     dirname(__DIR__)
 );
 
-// $app->withFacades();
+$facades = [
+    '\Venoudev\Results\Facades\ResultManagerFacade' =>  'ResultManager',
+    'Illuminate\Support\Facades\App' => 'App'
+];
 
-// $app->withEloquent();
+$app->withFacades(true ,$facades);
+$app->withEloquent();
+
+$app->bind('path.public', function() {
+    return __DIR__ . 'public/';
+});
+
 
 /*
 |--------------------------------------------------------------------------
@@ -76,9 +84,14 @@ $app->configure('app');
 //     App\Http\Middleware\ExampleMiddleware::class
 // ]);
 
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+$app->routeMiddleware([
+    'auth'       => App\Http\Middleware\Authenticate::class,
+    'permission' => Spatie\Permission\Middlewares\PermissionMiddleware::class,
+    'role'       => Spatie\Permission\Middlewares\RoleMiddleware::class,
+    'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
+    'cliente.credentials' => Laravel\Passport\Http\Middleware\CheckClientCredentials::class,
+]);
+
 
 /*
 |--------------------------------------------------------------------------
@@ -91,8 +104,8 @@ $app->configure('app');
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
+$app->register(App\Providers\AppServiceProvider::class);
+$app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 
 /*
@@ -111,5 +124,56 @@ $app->router->group([
 ], function ($router) {
     require __DIR__.'/../routes/web.php';
 });
+
+/*
+| Personal Components
+*/
+
+/**
+* Lumen Generator
+*/
+$app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
+
+/**
+* Services Provider
+*/
+$app->register(App\Providers\ServicesProvider::class);
+
+/**
+* Register Configure List
+*/
+$app->configure('app');
+$app->configure('auth');
+
+/**
+* Soft Deletes Cascade
+*/
+
+$app->register(Askedio\SoftCascade\Providers\LumenServiceProvider::class);
+
+
+/**
+* Venoudev Results
+*/
+
+$app->register(Venoudev\Results\Providers\LumenResultsServiceProvider::class);
+
+
+
+/**
+* Spatie Permissions
+*/
+$app->configure('permission');
+$app->alias('cache', \Illuminate\Cache\CacheManager::class);  // if you don't have this already
+$app->register(Spatie\Permission\PermissionServiceProvider::class);
+
+
+/**
+* Lumen Passport
+*/
+$app->register(Laravel\Passport\PassportServiceProvider::class);
+$app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
+$app->configure('auth');
+
 
 return $app;
