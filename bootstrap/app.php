@@ -24,7 +24,8 @@ $app = new \Dusterio\LumenPassport\Lumen7Application(
 
 $facades = [
     '\Venoudev\Results\Facades\ResultManagerFacade' =>  'ResultManager',
-    'Illuminate\Support\Facades\App' => 'App'
+    'Illuminate\Support\Facades\App' => 'App',
+    'Illuminate\Support\Facades\Storage' => 'Storage'
 ];
 
 $app->withFacades(true ,$facades);
@@ -140,24 +141,16 @@ $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 $app->register(App\Providers\SourcesServiceProvider::class);
 
 /**
-* Register Configure List
-*/
-
-
-/**
 * Soft Deletes Cascade
 */
 
 $app->register(Askedio\SoftCascade\Providers\LumenServiceProvider::class);
-
 
 /**
 * Venoudev Results
 */
 
 $app->register(Venoudev\Results\Providers\LumenResultsServiceProvider::class);
-
-
 
 /**
 * Spatie Permissions
@@ -166,15 +159,23 @@ $app->configure('permission');
 $app->alias('cache', \Illuminate\Cache\CacheManager::class);  // if you don't have this already
 $app->register(Spatie\Permission\PermissionServiceProvider::class);
 
-
 /**
 * Lumen Passport
 */
 $app->register(Laravel\Passport\PassportServiceProvider::class);
 $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
-
-
-$app->configure('app');
 $app->configure('auth');
+
+/**
+ * FileSystems
+ */
+
+$app->singleton(
+    Illuminate\Contracts\Filesystem\Factory::class,
+    function ($app) {
+    return new Illuminate\Filesystem\FilesystemManager($app);
+});
+$app->register(Illuminate\Filesystem\FilesystemServiceProvider::class);
+$app->configure('filesystems');
 
 return $app;
